@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { sendFarewellEmail } = require("./content");
-const { findOneDocument, deleteOneDocument, deleteManyDocuments } = require("./db");
+const { findOneDocument, deleteOneDocument, deleteManyDocuments, fetchAllCollectionData } = require("./db");
 
 /**
  * @description This function unsubscribes a user from the service
