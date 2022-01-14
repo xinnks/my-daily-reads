@@ -56,10 +56,11 @@ finalizedUnsubscription = ref(false),
 notification = ref({type: "", message: ""}),
 formNotification = ref({type: "", message: ""});
 
-email.value = route.params.email;
-// console.log("route.params.email: -- ", route.params.email)
+email.value = route.query.email;
 
 function unsubscribeRequest() {
+  notification.value.type = "";
+  notification.value.message = "";
   if(!email.value){
     formNotification.value.type = "error";
     formNotification.value.message = "email is required!";
@@ -71,9 +72,9 @@ function unsubscribeRequest() {
   })
   .then((response) => {
     notification.value.type = response.data.message === "Email Sent!" ? "success" : "error";
-    notification.value.message =response.data.message === "No user with email!" ? "Account doesn't exist." : "Oops! Please refresh the page.";
+    notification.value.message =response.data.message === "No user with email!" ? "Account doesn't exist." : response.data.message;
     requestLoading.value = false;
-    if(notification.value.type = response.data.message === "Email Sent!"){
+    if(response.data.message === "Email Sent!"){
       sentUnsubscriptionRequest.value = true;
     }
   })
@@ -88,14 +89,16 @@ function unsubscribe() {
   confirmLoading.value = true;
   formNotification.value.type = "";
   formNotification.value.message = "";
+  notification.value.type = "";
+  notification.value.message = "";
   if(!otp.value){
     formNotification.value.type = "error";
     formNotification.value.message = "otp is required!";
-    loading.value = false;
+    confirmLoading.value = false;
     return;
   }
   axios.post("/.netlify/functions/unsubscribe", {
-    email: email.value
+    otp: otp.value
   })
   .then((response) => {
     confirmLoading.value = false;
@@ -109,8 +112,9 @@ function unsubscribe() {
       setTimeout(() => { router.push("/") }, 3000);
     } else if(response.data.message === "OTP expired!"){
       notification.value.message = "The one time password has expired!";
-    } else {
-      notification.value.message = "Oops, some error on our side, please refresh!";
+    } else if(response.data.message === "Could not delete user's reads!"){
+      notification.value.type = "success";
+      notification.value.message = "Unsubscribed!";
     }
   })
   .catch(err => {
