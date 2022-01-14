@@ -1,0 +1,17 @@
+<template>
+  <p class="p-4 mb-4 m-4 width-full text-3xl">
+    Page Not Found
+  </p>
+
+  <p class="p-4 mb-4 mt-40 width-full text-2xl">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" height="200" width="200" class="mx-auto"><title>36-404 error</title><g id="_36-404_error" data-name="36-404 error"><polyline class="cls-1" points="12 25 1 25 1 21 1 1 31 1 31 21 31 25 20 25"/><line class="cls-1" x1="22" y1="31" x2="25" y2="31"/><line class="cls-1" x1="7" y1="31" x2="10" y2="31"/><polygon class="cls-1" points="22 31 10 31 12 25 20 25 22 31"/><line class="cls-1" x1="1" y1="21" x2="31" y2="21"/><polyline class="cls-1" points="6 8 6 12 9 12 11 12"/><polyline class="cls-1" points="9 8 9 12 9 15"/><polyline class="cls-1" points="21 8 21 12 24 12 26 12"/><polyline class="cls-1" points="24 8 24 12 24 15"/><rect class="cls-1" x="13" y="9" width="5" height="5"/></g></svg>
+  </p>
+
+  <div class="p-4 m-4 text-xl">
+    <router-link class="text-blue-800" to="/">Go Back Home</router-link> | <router-link class="text-blue-800" to="/update-keywords">Update Keywords</router-link>
+  </div>
+</template>
+
+<style>
+  .cls-1{fill:none;stroke:#000;stroke-linejoin:round;stroke-width:2px;}
+</style>
