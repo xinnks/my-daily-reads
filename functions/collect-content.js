@@ -33,7 +33,7 @@ exports.handler = async (event, context, callback) => {
     
     return callback(null, {
       statusCode: statusCode || 200,
-      body: JSON.stringify(message + " : " + secret)
+      body: JSON.stringify(message)
     })
   }
   catch (e) {

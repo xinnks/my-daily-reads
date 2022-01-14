@@ -9,7 +9,6 @@ const deleteManyDocuments = async (query = '', collection) => new Promise(async 
   // Use connect method to connect to the server
   try {
     await client.connect();
-    console.log('Connected successfully to server [deleteManyDocuments]');
     const db = client.db(dbName);
     const dbCollection = db.collection(collection) || db.collection('sources');
     
