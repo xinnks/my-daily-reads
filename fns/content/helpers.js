@@ -15,10 +15,10 @@ function formatDate(date = new Date(), format = "human") {
   let theDate = new Date(date);
   let parsedDate;
   if(format === "human"){
-    parsedDate = `${months[theDate.getMonth()]} ${theDate.getDate()}, ${theDate.getFullYear()}`;
+    parsedDate = `${months[theDate.getMonth()]} ${theDate.getUTCDate()}, ${theDate.getFullYear()}`;
   }
   if(format === "dashedDate"){
-    parsedDate = `${theDate.getDate()}-${theDate.getMonth()+1}-${theDate.getFullYear()}`;
+    parsedDate = `${theDate.getUTCDate()}-${theDate.getMonth()+1}-${theDate.getFullYear()}`;
   }
   return parsedDate;
 }
@@ -29,7 +29,7 @@ function formatDate(date = new Date(), format = "human") {
  * @param { Number } date => The difference to be operated on the date, defaults to -1
 **/
 function dateDifference(date = new Date(), difference = -1) {
-  return date.setDate(date.getDate() + difference)
+  return date.setDate(date.getUTCDate() + difference)
 }
 
 /**
