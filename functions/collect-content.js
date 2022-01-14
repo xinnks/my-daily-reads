@@ -2,6 +2,9 @@ require('dotenv').config();
 const { CollectContentForDay } = require("./../fns")
 
 exports.handler = async (event, context, callback) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 403, body: 'Method Not Allowed', headers: { 'Allow': 'POST' } }
+  }
 
   const data = event.body ? JSON.parse(event.body) : '';
   if(!data.secret || (data.secret && (data.secret !== process.env.CRON_REQUEST_SECRET))){
