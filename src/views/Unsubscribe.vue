@@ -27,12 +27,11 @@
       <label for="otp" class="col-start-1">OTP: </label>
       <input type="otp" v-model="otp" class="col-start-2 col-span-3 h-8 p-4 rounded-sm border-sm ring-2 ring-gray-500" required>
 
-      <button @click.prevent="unsubscribe()" class="col-start-2 col-span-2 h-10 p-2 rounded-md border-gray-700 bg-gray-700 hover:bg-gray-800 text-white ring-2 ring-gray-500 mt-4">
-        <svg :class="`${confirmLoading ? 'animate-spin':''} -ml-1 mr-3 h-5 w-5 text-white`" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-        {{ confirmLoading ? 'Processing..' : 'UNSUBSCRIBE' }}
+      <button @click.prevent="unsubscribe()" :class="`inline-flex flex-row justify-center col-start-2 col-span-2 h-10 p-2 rounded-md border-gray-700 bg-gray-700 hover:bg-gray-800 text-white ring-2 ring-gray-500 mt-4 ${confirmLoading?'cursor-not-allowed':''}`">
+        <svg v-if="confirmLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg> {{ confirmLoading ? 'Processing..' : 'UNSUBSCRIBE' }}
       </button>
     
     </form>
@@ -57,10 +56,11 @@ finalizedUnsubscription = ref(false),
 notification = ref({type: "", message: ""}),
 formNotification = ref({type: "", message: ""});
 
-email.value = route.params.email;
-// console.log("route.params.email: -- ", route.params.email)
+email.value = route.query.email;
 
 function unsubscribeRequest() {
+  notification.value.type = "";
+  notification.value.message = "";
   if(!email.value){
     formNotification.value.type = "error";
     formNotification.value.message = "email is required!";
@@ -72,9 +72,9 @@ function unsubscribeRequest() {
   })
   .then((response) => {
     notification.value.type = response.data.message === "Email Sent!" ? "success" : "error";
-    notification.value.message =response.data.message === "No user with email!" ? "Account doesn't exist." : "Oops! Please refresh the page.";
+    notification.value.message =response.data.message === "No user with email!" ? "Account doesn't exist." : response.data.message;
     requestLoading.value = false;
-    if(notification.value.type = response.data.message === "Email Sent!"){
+    if(response.data.message === "Email Sent!"){
       sentUnsubscriptionRequest.value = true;
     }
   })
@@ -89,14 +89,16 @@ function unsubscribe() {
   confirmLoading.value = true;
   formNotification.value.type = "";
   formNotification.value.message = "";
+  notification.value.type = "";
+  notification.value.message = "";
   if(!otp.value){
     formNotification.value.type = "error";
     formNotification.value.message = "otp is required!";
-    loading.value = false;
+    confirmLoading.value = false;
     return;
   }
   axios.post("/.netlify/functions/unsubscribe", {
-    email: email.value
+    otp: otp.value
   })
   .then((response) => {
     confirmLoading.value = false;
@@ -110,8 +112,9 @@ function unsubscribe() {
       setTimeout(() => { router.push("/") }, 3000);
     } else if(response.data.message === "OTP expired!"){
       notification.value.message = "The one time password has expired!";
-    } else {
-      notification.value.message = "Oops, some error on our side, please refresh!";
+    } else if(response.data.message === "Could not delete user's reads!"){
+      notification.value.type = "success";
+      notification.value.message = "Unsubscribed!";
     }
   })
   .catch(err => {

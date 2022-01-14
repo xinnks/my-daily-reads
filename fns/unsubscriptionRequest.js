@@ -1,6 +1,6 @@
 require('dotenv').config();
-const { findOneDocument } = require("./db");
-const { sendOtpEmail } = require("./content");
+const { findOneDocument, insertDocuments } = require("./db");
+const { sendOtpEmail, generateOTP } = require("./content");
 
 /**
  * @description This function verifies the user account from a unsubscription request

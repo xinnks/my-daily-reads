@@ -17,7 +17,7 @@ const routes = [
     component: () => import('./views/UpdateKeywords.vue')
   },
   {
-    path: '/unsubscribe/:email',
+    path: '/unsubscribe',
     name: 'unsubscribe',
     component: () => import('./views/Unsubscribe.vue')
   },
