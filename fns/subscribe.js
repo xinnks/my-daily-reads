@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { insertDocuments, findOneDocument } = require("./db");
 const { sendWelcomeEmail } = require("./content");
 
@@ -8,7 +9,7 @@ const { sendWelcomeEmail } = require("./content");
 **/
 const Subscribe = (userData, collectionName) => new Promise(async (resolve, reject) => {
   try {
-    const accountExists = await findOneDocument({email: userData[0].email}, 'comptes', {_id: 1, email: 1, name: 1});
+    const accountExists = await findOneDocument({email: userData[0].email}, process.env.USER_COLLECTION, {_id: 1, email: 1, name: 1});
     if(accountExists){
       message = "Email already subscribed!";
       return resolve(message);

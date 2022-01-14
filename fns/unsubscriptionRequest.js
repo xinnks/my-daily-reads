@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { findOneDocument } = require("./db");
 const { sendOtpEmail } = require("./content");
 
@@ -7,7 +8,7 @@ const { sendOtpEmail } = require("./content");
 **/
 const UnsubscriptionRequest = (email) => new Promise(async (resolve, reject) => {
   try {
-    const userAccount = await findOneDocument({email: email}, "comptes", {_id: 1, email: 1, name: 1});
+    const userAccount = await findOneDocument({email: email}, process.env.USER_COLLECTION, {_id: 1, email: 1, name: 1});
     if(!userAccount){
       message = "No user with email!";
       return resolve(message);

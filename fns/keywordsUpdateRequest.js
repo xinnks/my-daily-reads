@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { findOneDocument, insertDocuments } = require("./db");
 const { generateOTP, sendOtpEmail } = require("./content");
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { fetchDevToArticlesFromAPI, formatPostsDataSchema, formatDate, dateDifference } = require("./content");
 const { deleteManyDocuments, insertDocuments, fetchAllCollectionData } = require("./db");
 
@@ -14,9 +15,9 @@ const CollectContentForDay = () => new Promise(async (resolve, reject) => {
   let todayInsertDate = formatDate(today, "dashedDate");
   const allContentWithInsertDate = allContent.map(post => ({...post, insertDate: todayInsertDate}));
   
-  let existingContentStash = fetchAllCollectionData("content_stash", {insertDate: formatDate(dateDifference(new Date(), -1), "dashedDate")});
+  let existingContentStash = await fetchAllCollectionData(process.env.CONTENT_COLLECTION);
   if(existingContentStash){
-    const deleteExistingDBData = deleteManyDocuments({insertDate: formatDate(dateDifference(new Date(), -1), "dashedDate")}, 'content_stash');
+    const deleteExistingDBData = await deleteManyDocuments('', process.env.CONTENT_COLLECTION);
     if(!deleteExistingDBData){
       message = "Could not delete documents";
       // resolve(message);
@@ -24,7 +25,7 @@ const CollectContentForDay = () => new Promise(async (resolve, reject) => {
     }
   }
   
-  const submitDataToDB = insertDocuments(allContentWithInsertDate, 'content_stash');
+  const submitDataToDB = await insertDocuments(allContentWithInsertDate, process.env.CONTENT_COLLECTION);
   if(!submitDataToDB){
     message = "Could not submit documents";
     // TODO: send error log email

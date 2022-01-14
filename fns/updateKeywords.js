@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { findOneDocument, updateDocument, deleteOneDocument } = require("./db");
 
 /**
@@ -8,7 +9,7 @@ const { findOneDocument, updateDocument, deleteOneDocument } = require("./db");
 const UpdateKeywords = (otpData, keywordsData) => new Promise(async (resolve, reject) => {
   try {    
     let message;
-    const otpResult = await findOneDocument(otpData, 'otp', {_id: 1, email: 1, created: 1});
+    const otpResult = await findOneDocument(otpData, process.env.OTP_COLLECTION, {_id: 1, email: 1, created: 1});
     if(!otpResult){
       message = "OTP does not exist!";
       return resolve(message);
@@ -18,7 +19,7 @@ const UpdateKeywords = (otpData, keywordsData) => new Promise(async (resolve, re
       return resolve(message);
     }
     if(otpResult){
-      const deleteOTPRow = await deleteOneDocument(otpData, 'otp');
+      const deleteOTPRow = await deleteOneDocument(otpData, process.env.OTP_COLLECTION);
       if(!deleteOTPRow){
         message = "Could not delete OTP row!";
         // should send troubleshooting email here!! 
@@ -26,13 +27,13 @@ const UpdateKeywords = (otpData, keywordsData) => new Promise(async (resolve, re
       }
     }
     
-    const userAccount = await findOneDocument({email: otpResult.email}, 'comptes', {_id: 1, email: 1, name: 1});
+    const userAccount = await findOneDocument({email: otpResult.email}, process.env.USER_COLLECTION, {_id: 1, email: 1, name: 1});
     if(!userAccount){
       message = "No user with email!";
       return resolve(message);
     }
     
-    const updateKeywords = await updateDocument({email: userAccount.email}, keywordsData, 'comptes')
+    const updateKeywords = await updateDocument({email: userAccount.email}, keywordsData, process.env.USER_COLLECTION)
     if(!updateKeywords){
       message = "Could not update keywords!";
       // should send troubleshooting email here!! 

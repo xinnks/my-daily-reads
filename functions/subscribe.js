@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Subscribe } = require("./../fns")
 
 exports.handler = async (event, context, callback) => {

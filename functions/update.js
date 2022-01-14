@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { KeywordsUpdateRequest } = require("./../fns")
 
 exports.handler = async (event, context, callback) => {
@@ -12,7 +13,7 @@ exports.handler = async (event, context, callback) => {
   console.log(`update keywords for user with email: ${email}`);
 
   try{
-    const subscriptionResponse = await KeywordsUpdateRequest({ email: email}, 'comptes');
+    const subscriptionResponse = await KeywordsUpdateRequest({ email: email}, process.env.USER_COLLECTION);
     
     // options
     // "No user with email!"

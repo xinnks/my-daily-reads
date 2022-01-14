@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { analysePostsByKeywords, formatDate, sendDailyContentEmails } = require("./content");
 const { insertDocuments, fetchAllCollectionData } = require("./db");
 
@@ -6,13 +7,13 @@ const { insertDocuments, fetchAllCollectionData } = require("./db");
 **/
 const SendContentEmails = () => new Promise(async (resolve, reject) => {
   let message;
-  const userAccounts = await fetchAllCollectionData('comptes');
+  const userAccounts = await fetchAllCollectionData(process.env.USER_COLLECTION);
   if(!userAccounts){
     message = "Failed to fetch user accounts.";
     return resolve(message);
   }
   
-  const collectedStashedContent = await fetchAllCollectionData('content_stash');
+  const collectedStashedContent = await fetchAllCollectionData(process.env.CONTENT_COLLECTION);
   if(!collectedStashedContent){
     message = "Failed to fetch collected content.";
     // TODO: send error log email
@@ -51,7 +52,7 @@ const SendContentEmails = () => new Promise(async (resolve, reject) => {
     });
   });
   
-  const storeReads = insertDocuments(allUsersReads, 'user_reads');
+  const storeReads = insertDocuments(allUsersReads, process.env.READS_COLLECTION);
   if(!storeReads){
     message = "Failed to store reads to database.";
     // TODO: send error log email

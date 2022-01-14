@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { sendFarewellEmail } = require("./content");
 const { findOneDocument, deleteOneDocument, deleteManyDocuments } = require("./db");
 
@@ -8,7 +9,7 @@ const { findOneDocument, deleteOneDocument, deleteManyDocuments } = require("./d
 const Unsubscribe = (otpData) => new Promise(async (resolve, reject) => {
   try {    
     let message;
-    const otpResult = await findOneDocument(otpData, 'otp', {_id: 1, email: 1, created: 1});
+    const otpResult = await findOneDocument(otpData, process.env.OTP_COLLECTION, {_id: 1, email: 1, created: 1});
     if(!otpResult){
       message = "OTP does not exist!";
       return resolve(message);
@@ -18,7 +19,7 @@ const Unsubscribe = (otpData) => new Promise(async (resolve, reject) => {
       return resolve(message);
     }
     if(otpResult){
-      const deleteOTPRow = await deleteOneDocument(otpData, 'otp');
+      const deleteOTPRow = await deleteOneDocument(otpData, process.env.OTP_COLLECTION);
       if(!deleteOTPRow){
         message = "Could not delete OTP row!";
         // should send troubleshooting email here!! 
@@ -26,20 +27,20 @@ const Unsubscribe = (otpData) => new Promise(async (resolve, reject) => {
       }
     }
     
-    const userAccount = await findOneDocument({email: otpResult.email}, 'comptes', {_id: 1, email: 1, name: 1});
+    const userAccount = await findOneDocument({email: otpResult.email}, process.env.USER_COLLECTION, {_id: 1, email: 1, name: 1});
     if(!userAccount){
       message = "No user with email!";
       return resolve(message);
     }
     
-    const deleteUser = await deleteOneDocument({email: userAccount.email}, keywordsData, 'comptes');
+    const deleteUser = await deleteOneDocument({email: userAccount.email}, keywordsData, process.env.USER_COLLECTION);
     if(!deleteUser){
       message = "Could not delete user!";
       // should send troubleshooting email here!! 
       return resolve(message);
     }
     
-    const deleteUsersReads = await deleteManyDocuments({user: {email: userAccount.email}}, 'user_reads');
+    const deleteUsersReads = await deleteManyDocuments({user: {email: userAccount.email}}, process.env.READS_COLLECTION);
     if(!deleteUsersReads){
       message = "Could not delete user's reads!";
       // should send troubleshooting email here!! 
