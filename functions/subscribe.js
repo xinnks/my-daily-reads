@@ -16,7 +16,7 @@ exports.handler = async (event, context, callback) => {
     let filteredKeywords = keywords.match(/^([\w]+[ ]*[,]*[ ]*[\w]+)/gi);
     let escapedKeywordsData = filteredKeywords.length ? filteredKeywords.join(",") : filteredKeywords.join("");
 
-    const subscriptionResponse = await Subscribe([{name, email, keywords: escapedKeywordsData}], 'comptes');
+    const subscriptionResponse = await Subscribe([{name, email, keywords: escapedKeywordsData}], process.env.USER_COLLECTION);
     console.error("subscriptionResponse: -- ", subscriptionResponse);
 
     let message = {message: subscriptionResponse};

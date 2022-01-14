@@ -19,7 +19,7 @@ const KeywordsUpdateRequest = (userData, collectionName) => new Promise(async (r
     
     const otp = generateOTP();
     
-    const submitOTP = await insertDocuments([{email: userAccount.email, otp: otp, created: new Date()}], 'otp');
+    const submitOTP = await insertDocuments([{email: userAccount.email, otp: otp, created: new Date()}], process.env.OTP_COLLECTION);
     if(!submitOTP){
       message = "Could not create OTP row!";
       // TODO: Send error log email
