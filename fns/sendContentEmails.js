@@ -14,7 +14,7 @@ const SendContentEmails = () => new Promise(async (resolve, reject) => {
   }
   
   const collectedStashedContent = await fetchAllCollectionData(process.env.CONTENT_COLLECTION);
-  if(!collectedStashedContent){
+  if(!collectedStashedContent.length){
     message = "Failed to fetch collected content.";
     // TODO: send error log email
     return resolve(message);
