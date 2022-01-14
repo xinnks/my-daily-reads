@@ -12,7 +12,7 @@ exports.handler = async (event, context, callback) => {
   }
 
   try{
-    let collectContent = await CollectContentForDay();
+    let collectContent = await CollectContentForDay(data.count || 100);
   
     let message, statusCode;
     if(collectContent === "Could not delete documents"){

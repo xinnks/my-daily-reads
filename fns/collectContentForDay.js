@@ -5,9 +5,9 @@ const { deleteManyDocuments, insertDocuments, fetchAllCollectionData } = require
 /**
  * @description This function fetches and compiles the latest content from sources, formats to a preffered schema and stores them into the database
 **/
-const CollectContentForDay = () => new Promise(async (resolve, reject) => {
+const CollectContentForDay = (contentLimit) => new Promise(async (resolve, reject) => {
   let message;
-  let devToContent = await fetchDevToArticlesFromAPI(1, 5);
+  let devToContent = await fetchDevToArticlesFromAPI(1, contentLimit);
   let formattedDevToContent = await formatPostsDataSchema(devToContent, 0, devToContent.length, 'dev.to');
   
   const allContent = formattedDevToContent;
